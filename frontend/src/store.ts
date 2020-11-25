@@ -3,21 +3,22 @@ import thunk from 'redux-thunk';
 //import { productListReducer } from './reducers/productReducers';
 //import { composeWithDevTools } from 'redux-devtools-extension';
 import { ProductState } from './constants/productConstants';
-import { productListReducer } from './reducers/productReducers';
+import { productDetailsReducer, productListReducer } from './reducers/productReducers';
 import { History } from "history";
 import { connectRouter, routerMiddleware, RouterState } from "connected-react-router";
 import { composeWithDevTools } from 'redux-devtools-extension';
 
 export interface ApplicationState {
-  productList: ProductState;
   router: RouterState;
+  productList: ProductState;
 }
 
 
   export const createRootReducer = (history: History) =>
   combineReducers({
-    productList: productListReducer,
     router: connectRouter(history),
+    productList: productListReducer,
+    productDetails: productDetailsReducer,
   });
 
 

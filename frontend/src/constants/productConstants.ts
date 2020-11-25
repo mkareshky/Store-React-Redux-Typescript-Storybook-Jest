@@ -29,7 +29,7 @@ export interface Product {
   
   export interface ProductDetailsState {
     readonly loading: boolean;
-    readonly data: Product|undefined;
-    readonly errors?: string;
+    readonly product: Product|undefined;
+    readonly error?: string;
   }
   

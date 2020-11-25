@@ -1,6 +1,5 @@
 
 import React, { useEffect } from 'react';
-
 import Product from '../components/Product';
 import LoadingBox from '../components/LoadingBox';
 import MessageBox from '../components/MessageBox';
@@ -26,11 +25,8 @@ export default function HomeScreen() {
             list: state.productList,
         }
     }, shallowEqual);
-    var { loading, errors, products } = productList.list;
-    debugger
-    if (errors === "" && loading === false) {
-        products = productList.list.data.data.data;
-    }
+    var { loading, errors, data } = productList.list;
+
 
 
     useEffect(() => {
@@ -44,7 +40,7 @@ export default function HomeScreen() {
                 <MessageBox variant="danger">{errors}</MessageBox>
             ) : (
                         <div className="row center">
-                            {products.map((p: product) => (
+                            {data.map((p: product) => (
                                 <Product
                                     key={p._id}
                                     _id={p._id}

@@ -1,7 +1,7 @@
 import { ProductActionTypes, ProductDetailsActionTypes } from '../constants/productConstants';
 import { ActionCreator, Action } from "redux";
 import { ThunkAction } from "redux-thunk";
-import axios, { AxiosError } from "axios";
+import axios from "axios";
 import { ApplicationState } from '../store';
 
 
@@ -15,41 +15,33 @@ export type AppThunk = ActionCreator<
 
 export const listProducts = (): 
 ThunkAction<void, ApplicationState, null, Action<string>> => async(dispatch) => {
-   
-  await	axios
-		.get('/api/products')
-		.then((data) => {
-			console.log(data)
-			dispatch({
-                type: ProductActionTypes.PRODUCT_LIST_SUCCESS,
-                payload:{ data}
-			});
-		})
-		.catch((error: AxiosError) => {
-			dispatch({
-        type: ProductActionTypes.PRODUCT_LIST_FAIL,
-        payload: `Error: ${error.response}`
-			});
-		})
+	dispatch({
+		type: ProductActionTypes.PRODUCT_LIST_REQUEST,
+	  });
+	  try {
+		const { data } = await axios.get('/api/products');
+		dispatch({ type: ProductActionTypes.PRODUCT_LIST_SUCCESS, payload: data });
+	  } catch (error) {
+		dispatch({ type: ProductActionTypes.PRODUCT_LIST_FAIL, payload: error.message });
+	  }
+ 
 };
 
 
 export const detailsProducts = (productId:string): 
 ThunkAction<void, ApplicationState, null, Action<string>> => async(dispatch) => {
-   
-  await	axios
-		.get('/api/products')
-		.then((data) => {
-			console.log(data)
-			dispatch({
-                type: ProductDetailsActionTypes.PRODUCT_DETAILS_SUCCESS,
-                payload:{ data}
+		dispatch({
+			type: ProductDetailsActionTypes.PRODUCT_DETAILS_REQUEST,
+			 payload: productId });
+		  try {
+			const { data } = await axios.get(`/api/products/${productId}`);
+			dispatch({ type: ProductDetailsActionTypes.PRODUCT_DETAILS_SUCCESS, payload: data });
+		  } catch (error) {
+			dispatch({ type: ProductDetailsActionTypes.PRODUCT_DETAILS_FAIL, 
+				payload:  
+				error.response && error.response.data.message
+				? error.response.data.message
+				: error.message,
 			});
-		})
-		.catch((error: AxiosError) => {
-			dispatch({
-        type: ProductDetailsActionTypes.PRODUCT_DETAILS_FAIL,
-        payload: `Error: ${error.response}`
-			});
-		})
-};
+		}
+	  };
