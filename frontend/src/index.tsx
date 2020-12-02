@@ -9,9 +9,9 @@ import { Provider } from 'react-redux';
 const history = createBrowserHistory();
 
 
-const initialState: any = {};
+// const initialState: any = {};
 
-const store = configureStore(history, initialState);
+const store = configureStore( history);
 
 
 

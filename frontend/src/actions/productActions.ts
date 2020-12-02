@@ -10,9 +10,6 @@ export type AppThunk = ActionCreator<
 >;
 
 
-
-
-
 export const listProducts = (): 
 ThunkAction<void, ApplicationState, null, Action<string>> => async(dispatch) => {
 	dispatch({

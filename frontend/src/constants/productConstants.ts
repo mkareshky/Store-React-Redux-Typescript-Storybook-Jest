@@ -7,6 +7,7 @@ export interface Product {
     numReviews: number;
     price: number;
     countInStock:number;
+    description:string;
   }
   
   export enum ProductActionTypes {

@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import Rating from './Rating';
 
 interface product {
@@ -25,13 +26,13 @@ export default function Product(props:product) {
    // const { product } = props;
     return (
       <div key={props._id} className="card">
-        <a href={`/product/${props._id}`}>
+        <Link to={`/product/${props._id}`}>
           <img className="medium" src={props.image} alt={props.name} />
-        </a>
+        </Link>
         <div className="card-body">
-          <a href={`/product/${props._id}`}>
+        <Link to={`/product/${props._id}`}>
             <h2>{props.name}</h2>
-          </a>
+            </Link>
           <Rating
             rating={props.rating}
             numReviews={props.numReviews}

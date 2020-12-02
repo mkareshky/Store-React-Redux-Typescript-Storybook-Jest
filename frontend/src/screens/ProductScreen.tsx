@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, RouteComponentProps } from 'react-router-dom';
 import Rating from '../components/Rating';
-import { shallowEqual, useDispatch, useSelector } from 'react-redux';
+import {  useDispatch, useSelector } from 'react-redux';
 import { detailsProducts } from '../actions/productActions';
 import LoadingBox from '../components/LoadingBox';
 import MessageBox from '../components/MessageBox';
+import { ApplicationState } from '../store';
 
 
 // interface product {
@@ -29,46 +30,49 @@ import MessageBox from '../components/MessageBox';
 //   countInStock:0
 // }
 
+interface MatchParams {
+  id: string;
+  name: string;
+}
 
-export default function ProductScreen(props: any) {
-  
+interface Props extends RouteComponentProps<MatchParams> {
+}
+
+export default function ProductScreen(props:Props) {
+
   const dispatch = useDispatch();
-  const productDetails = useSelector<string, any>((state: any) => {
-    return {
-      data: state.productDetails,
-    }
-  }, shallowEqual);
-  var { loading, error, product } = productDetails.data;
+  const productDetails = useSelector((state: ApplicationState) => state.productDetails);
+  var { loading, error, product } = productDetails;
   const productId = props.match.params.id;
-  const [qty, setQty] = useState<any>(1);
+  const [qty, setQty] = useState<string>('1');
 
   const addToCartHandler = () => {
     props.history.push(`/cart/${productId}?qty=${qty}`);
   };
 
 
-  const ProuductQty=()=>{
+  const ProuductQty = () => {
 
-      const iterator = product.countInStock;
-      var arrx:any = [];
-      for (let index = 0; index < iterator; index++) {
-        arrx.push(index + 1)
-      }
-  
+    const iterator = product?.countInStock===undefined?0:product.countInStock;
+    var arrx = [];
+    for (let index = 0; index < iterator; index++) {
+      arrx.push(index + 1)
+    }
 
-  const listqty=  arrx.map(
-    (x:any) => (
-      <option key={x} value={x}>
-        {x}
-      </option>
+
+    const listqty = arrx.map(
+      (x: number) => (
+        <option key={x} value={x}>
+          {x}
+        </option>
+      )
     )
-  )
-  
-  return(
-    <React.Fragment>
-      {listqty}
-    </React.Fragment>
-  )
+
+    return (
+      <React.Fragment>
+        {listqty}
+      </React.Fragment>
+    )
   }
 
 
@@ -91,25 +95,25 @@ export default function ProductScreen(props: any) {
                 <div className="col-2">
                   <img
                     className="large"
-                    src={product.image}
-                    alt={product.name}
+                    src={product?.image}
+                    alt={product?.name}
                   ></img>
                 </div>
                 <div className="col-1">
                   <ul>
                     <li>
-                      <h1>{product.name}</h1>
+                      <h1>{product?.name}</h1>
                     </li>
                     <li>
                       <Rating
-                        rating={product.rating}
-                        numReviews={product.numReviews}
+                        rating={product?.rating||0}
+                        numReviews={product?.numReviews||0}
                       ></Rating>
                     </li>
-                    <li>Pirce : ${product.price}</li>
+                    <li>Pirce : ${product?.price}</li>
                     <li>
                       Description:
-                <p>{product.description}</p>
+                      <p>{product?.description}</p>
                     </li>
                   </ul>
                 </div>
@@ -119,14 +123,15 @@ export default function ProductScreen(props: any) {
                       <li>
                         <div className="row">
                           <div>Price</div>
-                          <div className="price">${product.price}</div>
+                          <div className="price">${product?.price}</div>
                         </div>
                       </li>
                       <li>
                         <div className="row">
                           <div>Status</div>
                           <div>
-                            {product.countInStock > 0 ? (
+                            {product===undefined?0:
+                            product.countInStock > 0 ? (
                               <span className="success">In Stock</span>
                             ) : (
                                 <span className="danger">Unavailable</span>
@@ -134,7 +139,8 @@ export default function ProductScreen(props: any) {
                           </div>
                         </div>
                       </li>
-                      {product.countInStock > 0 && (
+                      {product===undefined?0:
+                      product.countInStock > 0 && (
                         <>
                           <li>
                             <div className="row">
